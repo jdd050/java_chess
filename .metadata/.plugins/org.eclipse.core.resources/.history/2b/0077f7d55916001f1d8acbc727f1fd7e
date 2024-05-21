@@ -1,0 +1,126 @@
+package com.jdd050.chess;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.*;
+
+@SuppressWarnings("serial")
+public class Main extends JPanel implements ActionListener {
+	
+	public Dimension squareSize = new Dimension(100,100);
+	public static int files, ranks = 8;
+	public static JPanel chessBoard = new JPanel(new GridLayout(ranks, files));
+	
+	public Main() {
+		this.setBackground(Color.GRAY);
+		this.createGameGrid();
+	}
+	
+	
+	
+	// creates the grid with the chess board and labels (what the player can see)
+	public void createGameGrid() {
+			// define layout for main panel
+			setLayout(new GridBagLayout());
+			GridBagConstraints gbConstraints = new GridBagConstraints();
+			
+			// left-side rank labels
+			gbConstraints.gridx = 0;
+			gbConstraints.gridy = 1;
+			gbConstraints.gridwidth = 1;
+			gbConstraints.gridheight = 1;
+			gbConstraints.weightx = 0.0;
+			gbConstraints.weighty = 0.0;
+			gbConstraints.fill = GridBagConstraints.BOTH;
+			gbConstraints.anchor = GridBagConstraints.WEST;
+			gbConstraints.insets = new Insets(0, 10, 0, 10);
+			add(createRankPanel(), gbConstraints);
+			
+			// right-size rank labels
+			gbConstraints.gridx = 2;
+			gbConstraints.anchor = GridBagConstraints.EAST;
+			add(createRankPanel(), gbConstraints);
+			
+			// top file labels
+			gbConstraints.gridx = 1;
+			gbConstraints.gridy = 0;
+			gbConstraints.anchor = GridBagConstraints.SOUTH;
+			gbConstraints.insets = new Insets(5, 0, 5, 0);
+			add(createFilePanel(), gbConstraints);
+			
+			// bottom file labels
+			gbConstraints.gridy = 2;
+			gbConstraints.anchor = GridBagConstraints.NORTH;
+			add(createFilePanel(), gbConstraints);
+			
+			// the chess board itself
+			
+			// individual squares
+			
+			
+			// board as a whole
+			gbConstraints.gridx = 1;
+			gbConstraints.gridy = 1;
+			gbConstraints.anchor = GridBagConstraints.CENTER;
+			gbConstraints.insets = new Insets(0, 0, 0 ,0);
+			add(chessBoard, gbConstraints);
+		}
+		
+		// creates a files panel (for labeling) and returns the panel
+	private JPanel createFilePanel() {
+			JPanel filePanel = new JPanel(new GridLayout(1,0));
+			for (int i = 0; i < files; i++) {
+				// set current letter by increasing its ASCII value
+				char fileLetter = (char) ('A' + i);
+				JLabel letter = new JLabel(String.valueOf(fileLetter), SwingConstants.CENTER);
+				letter.setForeground(Color.white);
+				filePanel.add(letter);
+				filePanel.setBackground(Color.gray);
+			}
+			return filePanel;
+		}
+		
+		// creates a ranks panel (for labeling) and returns the panel
+	private JPanel createRankPanel() {
+			JPanel rankPanel = new JPanel(new GridLayout(0,1));
+			for (int i = 0; i < ranks; i++) {
+				// count down rather than up
+				int currentRow = ranks - i;
+				JLabel number = new JLabel(String.valueOf(currentRow));
+				number.setForeground(Color.white);
+				rankPanel.add(number);
+				rankPanel.setBackground(Color.gray);
+			}
+			return rankPanel;
+		}
+	
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				Main contentFrame = new Main();
+				JFrame application = new JFrame("Chess");
+				application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				application.getContentPane().add(contentFrame);
+				
+				application.pack();
+				application.setLocationByPlatform(true);
+				application.setVisible(true);
+			}
+		});
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

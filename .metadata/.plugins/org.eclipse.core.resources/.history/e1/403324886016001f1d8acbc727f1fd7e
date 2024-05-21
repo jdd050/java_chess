@@ -1,0 +1,83 @@
+package com.jdd050.chess;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.*;
+
+@SuppressWarnings("serial")
+public class Main extends JPanel implements ActionListener {
+	
+	public Dimension squareSize = new Dimension(100,100);
+	public static Color lightSquareColor = Color.white;
+	public static Color darkSquareColor = Color.black;
+	public static int files, ranks = 8;
+	public static JPanel chessBoard = new JPanel(new GridLayout(ranks, files));
+	
+	public Main() {
+		this.setBackground(Color.GRAY);
+		// set up layout manager for the background
+		GridBagLayout mainLayout = new GridBagLayout();
+		GridBagConstraints mainConstraints = new GridBagConstraints();
+		mainConstraints.gridx = 0;
+		mainConstraints.gridy = 0;
+		mainConstraints.gridwidth = 2;
+		mainConstraints.gridheight = 1;
+		mainConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+		// create the chess board
+		JPanel chessBoard = createBoard();
+		
+		this.add(chessBoard, mainConstraints);
+	}
+	
+	public JPanel createBoard() {
+		// create the chess board container
+		JPanel chessBoard = new JPanel(new GridLayout(files, ranks));
+		// add the individual squares to the board
+		for (int i = 0; i < files; i++) {
+			for (int j = 0; j < ranks; j++) {
+				// create the square and set its attributes
+				JPanel square = new JPanel();
+				square.setPreferredSize(squareSize);
+				Color squareColor = (i % 2 == j % 2) ? lightSquareColor : darkSquareColor;
+				square.setBackground(squareColor);
+				// add the square to the board
+				chessBoard.add(square);
+			}
+		}
+		return chessBoard;
+	}
+	
+	// runs the application
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				// container for all app elements
+				Main contentFrame = new Main();
+				// the window itself
+				JFrame application = new JFrame("Chess");
+				application.setPreferredSize(new Dimension(800, 800));
+				application.setResizable(false);
+				application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				application.getContentPane().add(contentFrame);
+				application.setLocationByPlatform(true);
+				application.setVisible(true);
+				// finalize the window and run
+				application.pack();
+			}
+		});
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

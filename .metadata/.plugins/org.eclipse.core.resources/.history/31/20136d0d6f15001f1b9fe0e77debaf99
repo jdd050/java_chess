@@ -1,0 +1,39 @@
+package com.jdd050.chess;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.*;
+
+@SuppressWarnings("serial")
+public class Main extends JPanel implements ActionListener {
+	
+	public Main() {
+		this.setBackground(Color.GRAY);
+	}
+	
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				Main contentFrame = new Main();
+				JFrame application = new JFrame("Chess");
+				application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				application.getContentPane().add(contentFrame);
+				application.setSize(new Dimension(800, 600));
+				application.pack();
+				application.setLocationByPlatform(true);
+				application.setVisible(true);
+			}
+		});
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

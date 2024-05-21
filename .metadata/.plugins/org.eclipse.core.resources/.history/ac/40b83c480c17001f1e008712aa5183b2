@@ -1,0 +1,9 @@
+package com.jdd050.chess;
+
+public class Piece {
+
+	public Piece() {
+		
+	}
+	
+}
