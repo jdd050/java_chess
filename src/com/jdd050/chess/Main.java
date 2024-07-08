@@ -1,7 +1,6 @@
 package com.jdd050.chess;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,11 +11,11 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-@SuppressWarnings("serial")
 public class Main extends JPanel implements ActionListener {
 
+    public JPanel chessBoard = null;
     public static Color lightSquareColor = Color.white;
-    public static Color darkSquareColor = Color.black;
+    public static Color darkSquareColor = Color.gray;
     public static int files = 8;
     public static int ranks = 8;
     public ArrayList<Piece> pieces = new ArrayList<Piece>();
@@ -33,16 +32,34 @@ public class Main extends JPanel implements ActionListener {
         mainConstraints.weighty = 1.0;
         mainConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
         // create the chess board
-        JPanel chessBoard = createBoard();
+        chessBoard = createBoard();
         this.add(chessBoard, mainConstraints);
-        // create a pawn as example
-        JLabel pawn = addPawn(0, 0, Color.white);
-        if (pawn != null) {
-            addPieceToBoard(chessBoard, 0, 0, pawn);
-            System.out.println(chessBoard.getComponent(0));
-        } else {
-            System.out.println("Error encountered while creating or adding piece");
+        // create pawns
+        for (int i = 0; i < 8; i++) {
+            addPawn(1, i, Color.black);
+            addPawn(6, i, Color.white);
         }
+        // create kings
+        addKing(0, 4, Color.black);
+        addKing(7, 4, Color.white);
+        // create queens
+        addQueen(0, 3, Color.black);
+        addQueen(7, 3, Color.white);
+        // create bishops
+        addBishop(0, 2, Color.black);
+        addBishop(0, 5, Color.black);
+        addBishop(7, 2, Color.white);
+        addBishop(7, 5, Color.white);
+        // create knights
+        addKnight(0, 1, Color.black);
+        addKnight(0, 6, Color.black);
+        addKnight(7, 1, Color.white);
+        addKnight(7, 6, Color.white);
+        // create rooks
+        addRook(0, 0, Color.black);
+        addRook(0, 7, Color.black);
+        addRook(7, 0, Color.white);
+        addRook(7, 7, Color.white);
     }
 
     public JPanel createBoard() {
@@ -64,58 +81,64 @@ public class Main extends JPanel implements ActionListener {
 
     // methods to add pieces
 
-    public JLabel addPawn(int rank, int file, Color pieceColor) {
+    public void addPawn(int rank, int file, Color pieceColor) {
         // get piece id based on amount of existing pieces
         int pieceId = pieces.size();
         // create the piece
         Piece pawn = new Piece("Pawn", pieceColor, pieceId, new Dimension(rank, file));
         pieces.add(pawn);
-        return pawn.piece;
+        // add piece to the board
+        addPieceToBoard(chessBoard, rank, file, pawn.piece);
     }
 
-    public JLabel addRook(int rank, int file, Color pieceColor) {
+    public void addRook(int rank, int file, Color pieceColor) {
         // get piece id based on amount of existing pieces
         int pieceId = pieces.size();
         // create the piece
         Piece rook = new Piece("Rook", pieceColor, pieceId, new Dimension(rank, file));
         pieces.add(rook);
-        return rook.piece;
+        // add piece to the board
+        addPieceToBoard(chessBoard, rank, file, rook.piece);
     }
 
-    public JLabel addKnight(int rank, int file, Color pieceColor) {
+    public void addKnight(int rank, int file, Color pieceColor) {
         // get piece id based on amount of existing pieces
         int pieceId = pieces.size();
         // create the piece
         Piece knight = new Piece("Knight", pieceColor, pieceId, new Dimension(rank, file));
         pieces.add(knight);
-        return knight.piece;
+        // add piece to the board
+        addPieceToBoard(chessBoard, rank, file, knight.piece);
     }
 
-    public JLabel addBishop(int rank, int file, Color pieceColor) {
+    public void addBishop(int rank, int file, Color pieceColor) {
         // get piece id based on amount of existing pieces
         int pieceId = pieces.size();
         // create the piece
         Piece bishop = new Piece("Bishop", pieceColor, pieceId, new Dimension(rank, file));
         pieces.add(bishop);
-        return bishop.piece;
+        // add piece to the board
+        addPieceToBoard(chessBoard, rank, file, bishop.piece);
     }
 
-    public JLabel addQueen(int rank, int file, Color pieceColor) {
+    public void addQueen(int rank, int file, Color pieceColor) {
         // get piece id based on amount of existing pieces
         int pieceId = pieces.size();
         // create the piece
         Piece queen = new Piece("Queen", pieceColor, pieceId, new Dimension(rank, file));
         pieces.add(queen);
-        return queen.piece;
+        // add piece to the board
+        addPieceToBoard(chessBoard, rank, file, queen.piece);
     }
 
-    public JLabel addKing(int rank, int file, Color pieceColor) {
+    public void addKing(int rank, int file, Color pieceColor) {
         // get piece id based on amount of existing pieces
         int pieceId = pieces.size();
         // create the piece
         Piece king = new Piece("King", pieceColor, pieceId, new Dimension(rank, file));
         pieces.add(king);
-        return king.piece;
+        // add piece to the board
+        addPieceToBoard(chessBoard, rank, file, king.piece);
     }
 
     // method for adding pieces to the board
@@ -135,7 +158,7 @@ public class Main extends JPanel implements ActionListener {
                 Main contentFrame = new Main();
                 // the window itself
                 JFrame application = new JFrame("Chess");
-                application.setPreferredSize(new Dimension(800, 800));
+                application.setPreferredSize(new Dimension(1200, 1200));
                 application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 application.getContentPane().add(contentFrame);
                 application.setLocationByPlatform(true);
@@ -149,8 +172,6 @@ public class Main extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
 
     }
-
 }
