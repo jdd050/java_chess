@@ -5,20 +5,21 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 
-public class Main extends JPanel implements ActionListener {
+public class Main extends JPanel {
 
     public JPanel chessBoard = null;
     public static Color lightSquareColor = Color.white;
     public static Color darkSquareColor = Color.gray;
     public static int files = 8;
     public static int ranks = 8;
-    public ArrayList<Piece> pieces = new ArrayList<Piece>();
+    public HashMap<Piece, JLabel> pieces = new HashMap<>();
 
     public Main() {
         this.setBackground(Color.GRAY);
@@ -60,6 +61,8 @@ public class Main extends JPanel implements ActionListener {
         addRook(0, 7, Color.black);
         addRook(7, 0, Color.white);
         addRook(7, 7, Color.white);
+        // create mouse listener devices for each piece
+        createMouseListeners();
     }
 
     public JPanel createBoard() {
@@ -70,6 +73,13 @@ public class Main extends JPanel implements ActionListener {
             for (int j = 0; j < files; j++) {
                 // create the square and set its attributes
                 JPanel square = new JPanel();
+                // add mouse listener
+                square.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        onSquareClicked(e);
+                    }
+                });
                 Color squareColor = (i % 2 == j % 2) ? lightSquareColor : darkSquareColor;
                 square.setBackground(squareColor);
                 // add the square to the board
@@ -86,7 +96,7 @@ public class Main extends JPanel implements ActionListener {
         int pieceId = pieces.size();
         // create the piece
         Piece pawn = new Piece("Pawn", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.add(pawn);
+        pieces.put(pawn, pawn.piece);
         // add piece to the board
         addPieceToBoard(chessBoard, rank, file, pawn.piece);
     }
@@ -96,7 +106,7 @@ public class Main extends JPanel implements ActionListener {
         int pieceId = pieces.size();
         // create the piece
         Piece rook = new Piece("Rook", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.add(rook);
+        pieces.put(rook, rook.piece);
         // add piece to the board
         addPieceToBoard(chessBoard, rank, file, rook.piece);
     }
@@ -106,7 +116,7 @@ public class Main extends JPanel implements ActionListener {
         int pieceId = pieces.size();
         // create the piece
         Piece knight = new Piece("Knight", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.add(knight);
+        pieces.put(knight, knight.piece);
         // add piece to the board
         addPieceToBoard(chessBoard, rank, file, knight.piece);
     }
@@ -116,7 +126,7 @@ public class Main extends JPanel implements ActionListener {
         int pieceId = pieces.size();
         // create the piece
         Piece bishop = new Piece("Bishop", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.add(bishop);
+        pieces.put(bishop, bishop.piece);
         // add piece to the board
         addPieceToBoard(chessBoard, rank, file, bishop.piece);
     }
@@ -126,7 +136,7 @@ public class Main extends JPanel implements ActionListener {
         int pieceId = pieces.size();
         // create the piece
         Piece queen = new Piece("Queen", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.add(queen);
+        pieces.put(queen, queen.piece);
         // add piece to the board
         addPieceToBoard(chessBoard, rank, file, queen.piece);
     }
@@ -136,7 +146,7 @@ public class Main extends JPanel implements ActionListener {
         int pieceId = pieces.size();
         // create the piece
         Piece king = new Piece("King", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.add(king);
+        pieces.put(king, king.piece);
         // add piece to the board
         addPieceToBoard(chessBoard, rank, file, king.piece);
     }
@@ -148,6 +158,19 @@ public class Main extends JPanel implements ActionListener {
         square.add(pieceLabel);
         square.revalidate();
         square.repaint();
+    }
+
+    // method for creating mouse listeners on each piece
+    private void createMouseListeners() {
+        for (Map.Entry<Piece, JLabel> entry : pieces.entrySet()) {
+            JLabel pieceLabel = (JLabel) entry.getValue();
+            pieceLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    onPieceClicked(e);
+                }
+            });
+        }
     }
 
     // runs the application
@@ -170,8 +193,14 @@ public class Main extends JPanel implements ActionListener {
         });
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    public void onPieceClicked(MouseEvent e) {
+        // check which piece was clicked
+        JLabel clickedPiece = (JLabel) e.getSource();
+        System.out.println(clickedPiece.getX() + " " + clickedPiece.getY());
+    }
 
+    public void onSquareClicked(MouseEvent e) {
+        JPanel clickedSquare = (JPanel) e.getSource();
+        System.out.println(clickedSquare.getX() + " " + clickedSquare.getY());
     }
 }
