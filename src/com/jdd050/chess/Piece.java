@@ -98,11 +98,11 @@ public class Piece {
             if (imageUrl != null) {
                 pieceImage = ImageIO.read(imageUrl);
                 pieceLabel = new JLabel(new ImageIcon(pieceImage));
+                pieceLabel.setName(pieceName);
             } else {
                 System.err.println("Image not found: " + imagePath);
             }
         }
-
         return pieceLabel;
     }
 }

@@ -13,6 +13,8 @@ import java.util.Map;
 import javax.swing.*;
 
 public class Main extends JPanel {
+    private JLabel selectedPiece = null;
+    private int numMoves = 0;
 
     public JPanel chessBoard = null;
     public static Color lightSquareColor = Color.white;
@@ -196,11 +198,30 @@ public class Main extends JPanel {
     public void onPieceClicked(MouseEvent e) {
         // check which piece was clicked
         JLabel clickedPiece = (JLabel) e.getSource();
-        System.out.println(clickedPiece.getX() + " " + clickedPiece.getY());
+        System.out.println("Piece clicked at: " + clickedPiece.getX() + " " + clickedPiece.getY());
+        selectedPiece = clickedPiece;
     }
 
     public void onSquareClicked(MouseEvent e) {
         JPanel clickedSquare = (JPanel) e.getSource();
-        System.out.println(clickedSquare.getX() + " " + clickedSquare.getY());
+        System.out.println("Square clicked at: " + clickedSquare.getX() + " " + clickedSquare.getY());
+
+        // if a piece is selected, move it to the selected square
+        if (selectedPiece != null) {
+            // remove image from old square and put in new square
+            JPanel parentSquare = (JPanel) selectedPiece.getParent();
+            clickedSquare.add(selectedPiece);
+            parentSquare.remove(selectedPiece);
+            // update squares
+            clickedSquare.revalidate();
+            clickedSquare.repaint();
+            parentSquare.revalidate();
+            parentSquare.repaint();
+            // deselect piece after done
+            System.out.println("Piece {" + selectedPiece.getName() + "} moved");
+            selectedPiece = null;
+            // increment move counter
+            numMoves += 1;
+        }
     }
 }
