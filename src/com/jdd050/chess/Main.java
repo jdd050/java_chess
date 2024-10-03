@@ -1,5 +1,7 @@
 package com.jdd050.chess;
 
+import com.jdd050.chess.Logic;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -7,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +24,7 @@ public class Main extends JPanel {
     public static Color darkSquareColor = Color.gray;
     public static int files = 8;
     public static int ranks = 8;
-    public HashMap<Piece, JLabel> pieces = new HashMap<>();
+    public HashMap<JLabel, Piece> pieces = new HashMap<>();
 
     public Main() {
         this.setBackground(Color.GRAY);
@@ -73,8 +76,10 @@ public class Main extends JPanel {
         // add the individual squares to the board
         for (int i = 0; i < ranks; i++) {
             for (int j = 0; j < files; j++) {
-                // create the square and set its attributes
+                // create the square and set its name to its coordinates
                 JPanel square = new JPanel();
+                String coordinates = String.valueOf(j + 1) + "," + String.valueOf(i + 1);
+                square.setName(coordinates);
                 // add mouse listener
                 square.addMouseListener(new MouseAdapter() {
                     @Override
@@ -98,9 +103,9 @@ public class Main extends JPanel {
         int pieceId = pieces.size();
         // create the piece
         Piece pawn = new Piece("Pawn", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.put(pawn, pawn.piece);
+        pieces.put(pawn.piece, pawn);
         // add piece to the board
-        addPieceToBoard(chessBoard, rank, file, pawn.piece);
+        addPieceToBoard(chessBoard, rank, file, pawn);
     }
 
     public void addRook(int rank, int file, Color pieceColor) {
@@ -108,9 +113,9 @@ public class Main extends JPanel {
         int pieceId = pieces.size();
         // create the piece
         Piece rook = new Piece("Rook", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.put(rook, rook.piece);
+        pieces.put(rook.piece, rook);
         // add piece to the board
-        addPieceToBoard(chessBoard, rank, file, rook.piece);
+        addPieceToBoard(chessBoard, rank, file, rook);
     }
 
     public void addKnight(int rank, int file, Color pieceColor) {
@@ -118,9 +123,9 @@ public class Main extends JPanel {
         int pieceId = pieces.size();
         // create the piece
         Piece knight = new Piece("Knight", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.put(knight, knight.piece);
+        pieces.put(knight.piece, knight);
         // add piece to the board
-        addPieceToBoard(chessBoard, rank, file, knight.piece);
+        addPieceToBoard(chessBoard, rank, file, knight);
     }
 
     public void addBishop(int rank, int file, Color pieceColor) {
@@ -128,9 +133,9 @@ public class Main extends JPanel {
         int pieceId = pieces.size();
         // create the piece
         Piece bishop = new Piece("Bishop", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.put(bishop, bishop.piece);
+        pieces.put(bishop.piece, bishop);
         // add piece to the board
-        addPieceToBoard(chessBoard, rank, file, bishop.piece);
+        addPieceToBoard(chessBoard, rank, file, bishop);
     }
 
     public void addQueen(int rank, int file, Color pieceColor) {
@@ -138,9 +143,9 @@ public class Main extends JPanel {
         int pieceId = pieces.size();
         // create the piece
         Piece queen = new Piece("Queen", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.put(queen, queen.piece);
+        pieces.put(queen.piece, queen);
         // add piece to the board
-        addPieceToBoard(chessBoard, rank, file, queen.piece);
+        addPieceToBoard(chessBoard, rank, file, queen);
     }
 
     public void addKing(int rank, int file, Color pieceColor) {
@@ -148,24 +153,28 @@ public class Main extends JPanel {
         int pieceId = pieces.size();
         // create the piece
         Piece king = new Piece("King", pieceColor, pieceId, new Dimension(rank, file));
-        pieces.put(king, king.piece);
+        pieces.put(king.piece, king);
         // add piece to the board
-        addPieceToBoard(chessBoard, rank, file, king.piece);
+        addPieceToBoard(chessBoard, rank, file, king);
     }
 
     // method for adding pieces to the board
-    private void addPieceToBoard(JPanel chessBoard, int rank, int file, JLabel pieceLabel) {
+    private void addPieceToBoard(JPanel chessBoard, int rank, int file, Piece piece) {
+        // set index
         int index = (rank * files) + file;
+        // set piece location
+        piece.pieceLocation = new Dimension(rank + 1, file + 1);
+        // add to board
         JPanel square = (JPanel) chessBoard.getComponent(index);
-        square.add(pieceLabel);
+        square.add(piece.piece);
         square.revalidate();
         square.repaint();
     }
 
     // method for creating mouse listeners on each piece
     private void createMouseListeners() {
-        for (Map.Entry<Piece, JLabel> entry : pieces.entrySet()) {
-            JLabel pieceLabel = (JLabel) entry.getValue();
+        for (Map.Entry<JLabel, Piece> entry : pieces.entrySet()) {
+            JLabel pieceLabel = (JLabel) entry.getKey();
             pieceLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -198,30 +207,72 @@ public class Main extends JPanel {
     public void onPieceClicked(MouseEvent e) {
         // check which piece was clicked
         JLabel clickedPiece = (JLabel) e.getSource();
-        System.out.println("Piece clicked at: " + clickedPiece.getX() + " " + clickedPiece.getY());
+        System.out.println("Piece clicked at: " + pieces.get(clickedPiece).pieceLocation.height + " " + pieces.get(clickedPiece).pieceLocation.width);
         selectedPiece = clickedPiece;
     }
 
+    // TODO:
+    // Check for pieces in path, eg. bishop cannot jump over pawns, pieces cannot occupy same square
+    // implement capture logic
+    // implement turns
     public void onSquareClicked(MouseEvent e) {
         JPanel clickedSquare = (JPanel) e.getSource();
-        System.out.println("Square clicked at: " + clickedSquare.getX() + " " + clickedSquare.getY());
+        Logic validation = new Logic();
 
         // if a piece is selected, move it to the selected square
         if (selectedPiece != null) {
-            // remove image from old square and put in new square
             JPanel parentSquare = (JPanel) selectedPiece.getParent();
-            clickedSquare.add(selectedPiece);
-            parentSquare.remove(selectedPiece);
-            // update squares
-            clickedSquare.revalidate();
-            clickedSquare.repaint();
-            parentSquare.revalidate();
-            parentSquare.repaint();
-            // deselect piece after done
-            System.out.println("Piece {" + selectedPiece.getName() + "} moved");
-            selectedPiece = null;
-            // increment move counter
-            numMoves += 1;
+            // need to get Piece class instance to check index
+            Piece pieceObject = pieces.get(selectedPiece);
+            // calculate move distance in horizontal and vertical components for validation
+            String parentCoordinates = parentSquare.getName();
+            String clickedCoordinates = clickedSquare.getName();
+            // convert parent coordinates to integers
+            ArrayList<Integer> pCoordinates = new ArrayList<Integer>();
+            for (int i = 0; i < parentCoordinates.length(); i++) {
+                int number = parentCoordinates.charAt(i) - '0';
+                // ignore non numbers
+                if (number < 0) {
+                    continue;
+                } else {
+                    pCoordinates.addLast(number);
+                }
+            }
+            // convert clicked coordinates to integers
+            ArrayList<Integer> cCoordinates = new ArrayList<Integer>();
+            for (int i = 0; i < clickedCoordinates.length(); i++) {
+                int number = clickedCoordinates.charAt(i) - '0';
+                // ignore non numbers
+                if (number < 0) {
+                    continue;
+                } else {
+                    cCoordinates.addLast(number);
+                }
+            }
+            // validate the move
+            int moveX = Math.abs(cCoordinates.getFirst() - pCoordinates.getFirst());
+            int moveY = Math.abs(cCoordinates.getLast() - pCoordinates.getLast());
+            boolean validMove = validation.validateMove(pieceObject, moveX, moveY);
+            // remove image from old square and put in new square
+            if (validMove) {
+                clickedSquare.add(selectedPiece);
+                parentSquare.remove(selectedPiece);
+                // update squares
+                clickedSquare.revalidate();
+                clickedSquare.repaint();
+                parentSquare.revalidate();
+                parentSquare.repaint();
+                // display information about valid move
+                System.out.println("Valid move #" + Integer.toString(numMoves) + ":");
+                System.out.println("Piece '" + selectedPiece.getName() + "' moved from " + pCoordinates + " to " + cCoordinates + ".");
+                // deselect piece after done
+                selectedPiece = null;
+                // increment move counter
+                numMoves += 1;
+            } else {
+                System.out.println("## INVALID MOVE ##");
+                selectedPiece = null;
+            }
         }
     }
 }

@@ -15,15 +15,24 @@ public class Piece {
     public int pieceId;
     public Color pieceColor;
     public String pieceType;
-
+    public Dimension pieceLocation;
+    public boolean inCheck;
     public Piece(String pieceName, Color piece_color, int piece_id, Dimension location) {
         // Clean the input string for the piece name
-        pieceName = pieceName.toLowerCase();
-        pieceName = pieceName.replace(" ", "");
+        if (piece_color == Color.black) {
+            pieceName = "black_" + pieceName.toLowerCase();
+            pieceName = pieceName.replace(" ", "");
+        } else if (piece_color == Color.white) {
+            pieceName = "white_" + pieceName.toLowerCase();
+            pieceName = pieceName.replace(" ", "");
+        }
         // Set instance variables
         pieceId = piece_id;
         pieceColor = piece_color;
         pieceType = pieceName;
+        pieceLocation = location;
+        // this instance variable only to be used when piece.pieceType = queen
+        inCheck = false;
         // Set instance variables
         try {
             piece = loadPieceImage(pieceName, pieceColor);
@@ -41,22 +50,22 @@ public class Piece {
         // Black pieces
         if (pieceColor == Color.black) {
             switch (pieceName) {
-                case "pawn":
+                case "black_pawn":
                     imagePath = "./assets/b_pawn_png_128px.png";
                     break;
-                case "rook":
+                case "black_rook":
                     imagePath = "./assets/b_rook_png_128px.png";
                     break;
-                case "knight":
+                case "black_knight":
                     imagePath = "./assets/b_knight_png_128px.png";
                     break;
-                case "bishop":
+                case "black_bishop":
                     imagePath = "./assets/b_bishop_png_128px.png";
                     break;
-                case "king":
+                case "black_king":
                     imagePath = "./assets/b_king_png_128px.png";
                     break;
-                case "queen":
+                case "black_queen":
                     imagePath = "./assets/b_queen_png_128px.png";
                     break;
                 default:
@@ -65,22 +74,22 @@ public class Piece {
             }
         } else if (pieceColor == Color.white) {
             switch (pieceName) {
-                case "pawn":
+                case "white_pawn":
                     imagePath = "./assets/w_pawn_png_128px.png";
                     break;
-                case "rook":
+                case "white_rook":
                     imagePath = "./assets/w_rook_png_128px.png";
                     break;
-                case "knight":
+                case "white_knight":
                     imagePath = "./assets/w_knight_png_128px.png";
                     break;
-                case "bishop":
+                case "white_bishop":
                     imagePath = "./assets/w_bishop_png_128px.png";
                     break;
-                case "king":
+                case "white_king":
                     imagePath = "./assets/w_king_png_128px.png";
                     break;
-                case "queen":
+                case "white_queen":
                     imagePath = "./assets/w_queen_png_128px.png";
                     break;
                 default:
