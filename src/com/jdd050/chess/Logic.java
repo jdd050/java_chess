@@ -28,7 +28,7 @@ public class Logic {
                 break;
             case "knight":
                 // enforce knight movement pattern
-                if ((moveX != 2 && moveY != 3) || (moveX != 3 && moveY != 2)) { return false; }
+                if (Math.abs(moveX - moveY) != 1) { return false; }
                 break;
             case "bishop":
                 // only allow diagonal movement
@@ -36,7 +36,8 @@ public class Logic {
                 break;
             case "queen":
                 // disallow illegal queen movements
-                if ((moveX >= 1 && moveY > 1) || (moveY >= 1 && moveX > 1)) { return false; }
+                //if ((moveX >= 1 && moveY > 1) || (moveY >= 1 && moveX > 1)) { return false; }
+                if ((moveX > 0 && moveY > moveX) || (moveY > 0 && moveX > moveY)) { return false; }
                 break;
             case "king":
                 if (moveX > 1 || moveY > 1) { return false; }
