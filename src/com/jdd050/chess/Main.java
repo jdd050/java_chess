@@ -12,13 +12,14 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.swing.*;
 
 public class Main extends JPanel {
+    // fields
     private JLabel selectedPiece = null;
     private int numMoves = 0;
-
     public JPanel chessBoard = null;
     public static Color lightSquareColor = Color.white;
     public static Color darkSquareColor = Color.gray;
@@ -26,6 +27,7 @@ public class Main extends JPanel {
     public static int ranks = 8;
     public HashMap<JLabel, Piece> pieces = new HashMap<>();
 
+    // constructor
     public Main() {
         this.setBackground(Color.GRAY);
         // set up layout manager for the background
@@ -70,6 +72,7 @@ public class Main extends JPanel {
         createMouseListeners();
     }
 
+    // method to create the chess board panel
     public JPanel createBoard() {
         // create the chess board container
         JPanel chessBoard = new JPanel(new GridLayout(ranks, files));
@@ -218,6 +221,7 @@ public class Main extends JPanel {
     public void onSquareClicked(MouseEvent e) {
         JPanel clickedSquare = (JPanel) e.getSource();
         Logic validation = new Logic();
+        validation.setPieces(pieces);
 
         // if a piece is selected, move it to the selected square
         if (selectedPiece != null) {
@@ -250,8 +254,9 @@ public class Main extends JPanel {
                 }
             }
             // validate the move
-            int moveX = Math.abs(cCoordinates.getFirst() - pCoordinates.getFirst());
-            int moveY = Math.abs(cCoordinates.getLast() - pCoordinates.getLast());
+            int moveX = cCoordinates.getFirst() - pCoordinates.getFirst();
+            int moveY = -(cCoordinates.getLast() - pCoordinates.getLast());
+
             boolean validMove = validation.validateMove(pieceObject, moveX, moveY);
             // remove image from old square and put in new square
             if (validMove) {
